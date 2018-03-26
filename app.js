@@ -81,7 +81,7 @@ app.get("/campgrounds/new", function (req, res) {
 //  COMMENTS ROUTES
  //============================
 
- app.get("/campgrounds/:id/comments/new", function(req, res){
+ app.get("/campgrounds/:id/comments/new", isLoggIn, function(req, res){
     // find campground by id
     Campground.findById(req.params.id, function(err, campground){
         if(err){
@@ -92,7 +92,7 @@ app.get("/campgrounds/new", function (req, res) {
     })
 });
 
- app.post("/campgrounds/:id/comments", function(req, res){
+ app.post("/campgrounds/:id/comments", isLoggIn, function(req, res){
     //lookup campground using ID
     Campground.findById(req.params.id, function(err, campground){
         if(err){
@@ -152,6 +152,19 @@ app.post('/login', passport.authenticate("local",
     }) 
     ,function (req, res) {
 });
+
+// logout logic 
+app.get("/logout", function (req, res) {
+    req.logout();
+    res.redirect("/campgrounds");
+});
+
+function isLoggIn(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect("/login");
+}
 
 app.listen(3000, function () {
     console.log("the Yelcamp server is fighting");
