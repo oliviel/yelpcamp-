@@ -42,7 +42,7 @@ router.post("/login", passport.authenticate("local",
 });
 
 // logout route
-app.get("/logout", function (req, res) {
+router.get("/logout", function (req, res) {
     req.logout();
     res.redirect("/campgrounds");
 });
