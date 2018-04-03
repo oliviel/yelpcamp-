@@ -8,7 +8,7 @@ var middleWare = require("../middleware/index");
 router.get("/new", middleWare.isLoggIn, function(req, res) {
     // find campground by id
     Campground.findById(req.params.id, function(err, campground) {
-        if(err){
+        if(err) {
             console.log(err);
         } else {
              res.render("comments/new", {campground: campground});
@@ -20,7 +20,8 @@ router.get("/new", middleWare.isLoggIn, function(req, res) {
 router.post("/", middleWare.isLoggIn, function(req, res) {
     //lookup campground using ID
     Campground.findById(req.params.id, function(err, campground) {
-        if(err){
+        if(err) {
+            req.flash("error", "Something went wrong");
             console.log(err);
             res.redirect("/campgrounds");
         } else {
@@ -36,6 +37,7 @@ router.post("/", middleWare.isLoggIn, function(req, res) {
                 campground.comments.push(comment);
                 campground.save();
                 console.log(comment);
+                req.flash("success", "Succesfully added comment");
                 res.redirect("/campgrounds/" + campground._id);
             }
          });
@@ -71,6 +73,7 @@ router.delete("/:comment_id", middleWare.checkCommentOwnership, function (req, r
         if (err) {
             res.redirect("back");
         } else {
+            req.flash("success", "Comment deleted");
             res.redirect("/campgrounds/" + req.params.id);
         }
     });
