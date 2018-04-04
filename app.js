@@ -50,5 +50,5 @@ app.use("/campgrounds", campgroundRoutes);
 app.use("/campgrounds/:id/comments", commentRoutes);
 
 app.listen(3000, function () {
-    console.log("the Yelcamp server is fighting");
+    console.log("the Yelcamp server is on fire!");
 });

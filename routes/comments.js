@@ -8,8 +8,10 @@ var middleWare = require("../middleware/index");
 router.get("/new", middleWare.isLoggIn, function(req, res) {
     // find campground by id
     Campground.findById(req.params.id, function(err, campground) {
-        if(err) {
+        if(err || !campground) {
+            req.flash("error", "Campground not found");
             console.log(err);
+            res.redirect("back");
         } else {
              res.render("comments/new", {campground: campground});
         }
@@ -47,12 +49,18 @@ router.post("/", middleWare.isLoggIn, function(req, res) {
 
 // COMMENT EDIT ROUTE 
 router.get("/:comment_id/edit", middleWare.checkCommentOwnership, function (req, res) {
-    Comment.findById(req.params.comment_id, function (err, foundComment) {
-        if (err) {
-            res.redirect("back");
-        } else {
-            res.render("comments/edit", {campground_id: req.params.id, comment: foundComment}); 
+    Campground.findById(req.params.id, function (err, founCampground) {
+        if (err || !founCampground) {
+            req.flash("error", "Campground not found");
+            return res.redirect("back");
         }
+        Comment.findById(req.params.comment_id, function (err, foundComment) {
+            if (err) {
+                res.redirect("back");
+            } else {
+                res.render("comments/edit", {campground_id: req.params.id, comment: foundComment}); 
+            }
+        });
     });
 });
 
