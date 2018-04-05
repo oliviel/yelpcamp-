@@ -11,7 +11,7 @@ router.get("/", function (req, res) {
             console.log("THERE IS AN ERROR LOOK THE CODE SLAVE");
             console.log(err);
         } else{
-            res.render("campgrounds/index", {campgrounds: allCampgrounds});
+            res.render("campgrounds/index", {campgrounds: allCampgrounds, page: 'campgrounds'});
         }
     });
 });
